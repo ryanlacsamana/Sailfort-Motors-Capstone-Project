@@ -1,5 +1,5 @@
 {
-    "editor.fontSize": 12,
-    "notebook.markup.fontSize": 13,
+    "editor.fontSize": 13,
+    "notebook.markup.fontSize": 14,
     "notebook.output.fontSize": 12
 }
