@@ -925,3 +925,137 @@ df1.groupby(['left'])['satisfaction_level'].agg(['mean','median'])
   </tbody>
 </table>
 </div>
+
+Employees who left the company gave a mean and median satisfaction level of 0.44 and 0.41, respectively. These values are lower than the mean and median satisfaction level from employees who stayed in the company. Also, mean satisfaction score from employees who stayed is quite lower than the median, which could indicate that the satisfaction level for employees who stayed is skewed to the left.
+
+#### d. Salary Levels for Different Tenures
+```
+fig, ax = plt.subplots(1,2, figsize=(14,7))
+
+## Define tenure classification
+## Long-tenured employees (more than 6 years)
+## Short-tenured employees (6 years and less)
+tenure_long = df1[df1['tenure'] > 6]
+tenure_short = df1[df1['tenure'] < 7]
+
+## Plot Long-tenured histogram
+sns.histplot(data=tenure_long, x='tenure', hue='salary', discrete=1, hue_order=['low','medium','high'], multiple='dodge', shrink=0.5, ax=ax[0])
+ax[0].set_title('Salary Histogram for Long-tenured Employees', fontweight='bold')
+
+## Plot Short-tenured histogram
+sns.histplot(data=tenure_short, x='tenure', hue='salary', discrete=1, hue_order=['low','medium','high'], multiple='dodge', shrink=0.5, ax=ax[1])
+ax[1].set_title('Salary Histogram for Short-tenured Employees', fontweight='bold')
+
+
+plt.show()
+```
+![salary hist](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/272a0f65-e87f-4039-a395-73678e83a38e)
+
+The plot above shows that majority of long-tenured employees have medium salaries, however there is a little discrepancy between the number of low, medium, and highly-paid long-tenured employees, unlike for short-tenured employees, which has a very large number of low and medium-paid employees compared to highly-paid employees.
+
+#### e. Relationship between last_evaluation and average_monthly_hours
+We will create a scatterplot to determine if there is a correlation between working long hours and receiving high evaluation points.
+```
+plt.figure(figsize=(9,5))
+sns.scatterplot(data=df1, x='average_monthly_hours', y='last_evaluation', hue='left', alpha=0.4, s=10)
+plt.axvline(x=166.67, color='red', linestyle='--')
+plt.legend(labels=['166.67 hours/month','stayed','left'], fontsize=7)
+plt.title('Relationship between Monthly Hours Worked and Evaluation Score', fontweight='bold')
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.show()
+```
+![scat work eval](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/c4b8cec7-b992-4bba-bae5-5c8075393c5f)
+
+The relationship yields the following observations:
+
+1.  There are two types of employees who left the company. The first group are employees who worked more than the monthly average of 166.67 hours and received high evaluation scores, these could indicate employees with high productivity but overworked. The second group are employees who worked less than the monthly average and received low evaluation scores.
+2.  It seems like a noticeable amount of employees in the far upper right quadrant worked the longest hours and left the company, despite having high evaluation scores.
+3.  There seems to be a correlation between the number of hours worked and evaluation scores.
+4.  Despite having a correlation, working more than the monthly average does not guarantee high evaluation scores.
+5.  Based on the distribution of points in the scatterplot, most of the employees worked more than the monthly average of 166.67 hours/month.
+
+#### f. Relationship between average_monthly_hours and promotion_last_5years
+Inspect whether employees who worked more than the monthly average were promoted in the last 5 years.
+```
+figsize=(7,7)
+
+sns.scatterplot(data=df1, x='average_monthly_hours', y='promotion_last_5years', hue='left', alpha=0.4)
+plt.axvline(x=166.67, color='red', linestyle='--')
+plt.title('Monthly Hours by Promotion last 5 Years', fontweight='bold')
+plt.legend(labels=['166.67 hours/month','stayed','left'], fontsize=7)
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.show()
+```
+![scat prom](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/5e8ee729-64ac-4c27-bfed-6a53da98b57c)
+
+The plot above shows the following observations:
+1.  There are very few employees who worked more than the monthly average were promoted.
+2.  The employees who worked the longest hours, and left the company, were not promoted in the last 5 years.
+3.  Majority of employees who left worked far more than the monthly average.
+   
+#### g. Distribution of Employees between Departments
+Inspect the distribution of employees between departments:
+```
+print(df1['department'].value_counts())
+```
+```
+department
+sales          3239
+technical      2244
+support        1821
+IT              976
+RandD           694
+product_mng     686
+marketing       673
+accounting      621
+hr              601
+management      436
+Name: count, dtype: int64
+```
+Plot a histogram to compare the distribution of employees of left and stayed for each department.
+```
+plt.subplots(figsize=(9,7))
+
+sns.histplot(data=df1, x='department', hue='left', multiple='dodge', shrink=0.4)
+plt.legend(labels=['left','stayed'])
+plt.xticks(rotation=45, fontsize=10)
+plt.title('Count of Employees Stayed/Left per Department', fontweight='bold')
+
+plt.show()
+```
+![count stay left](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/45e3da36-6a37-4343-a4f3-bb83c476363d)
+
+Based on the histogram above, all departments have a higher number of employees who stayed versus employees who left.
+
+#### h. Correlations between Variables in the Data
+To clearly visualize the relationship between each variables in the dataset, we will use a heatmap.
+```
+heatmap_corr=df1[['satisfaction_level','last_evaluation','number_project','average_monthly_hours','tenure','work_accident','left','promotion_last_5years']].corr()
+
+plt.figure(figsize=(8,5))
+
+heatmap = sns.heatmap(heatmap_corr, annot=True, annot_kws={'fontsize': 6}, vmin=-1, vmax=1, cmap=sns.diverging_palette(220,20, as_cmap=True))
+heatmap.set_title('Correlation Heatmap', fontweight='bold', fontsize=12, pad=12)
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.show()
+```
+![corr heatmap](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/c1891813-6ded-41a5-ba74-b248b1a4389c)
+
+The correlation heatmap shows positive correlation for the following values - average_monthly_hours, number_project, and last_evaluation, while showing negative correlation for left, and satisfaction_level.
+
+#### i. Insights
+Based on the relationship between variables, it could imply that employees are leaving due to long working hours and number of projects, it seems that these employees are burned out, which could reflect in the employee's satisfaction level.
+Employees who left did not receive promotion in the last 5 years, despite having high evaluation scores.
+An employee who spends more than 6 years in the company tends not to leave, however, there are very few employees who reached this tenure.
+
+### Model Building, Results and Evaluation
+The goal for this project is to predict whether an employee will leave the company. The outcome is a categorical variable and involves binary classification. The outcome variable will be 1 (employee left the company) and 0 (employee did not leave the company).
+
+
+
