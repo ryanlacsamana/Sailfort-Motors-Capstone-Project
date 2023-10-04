@@ -31,7 +31,8 @@ Department|The employee's department
 salary|The employee's salary (U.S. dollars)
 
 ### **Import the necessary packages**
-'''
+
+```
 
 ## For data manipulation
 import numpy as np
@@ -65,4 +66,6 @@ import pickle
 import warnings
 warnings.simplefilter(action = 'ignore', category = FutureWarning)
 
-'''
+```
+
+
