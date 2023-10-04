@@ -228,3 +228,12 @@ df0.head(10)
   </tbody>
 </table>
 </div>
+
+### **Data Exploration**
+
+#### **Basic Information about the Data**
+
+```
+## Basic information about the data
+df0.info()
+```
