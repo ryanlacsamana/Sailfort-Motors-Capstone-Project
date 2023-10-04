@@ -29,3 +29,40 @@ left|Whether or not the employee left the company
 promotion_last_5years|Whether or not the employee was promoted in the last 5 years
 Department|The employee's department
 salary|The employee's salary (U.S. dollars)
+
+### **Import the necessary packages**
+'''
+
+## For data manipulation
+import numpy as np
+import pandas as pd
+
+## For data visualization
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import seaborn as sns
+
+## For displaying all columns in the dataframe
+pd.set_option('display.max_columns',None)
+
+## For data modeling
+from xgboost import XGBClassifier
+from xgboost import XGBRegressor
+from xgboost import plot_importance
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+## For metrics and helpful functions
+from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, confusion_matrix, ConfusionMatrixDisplay, classification_report, roc_auc_score, roc_curve
+from sklearn.tree import plot_tree
+
+# For saving models
+import pickle
+
+# Miscellaneous
+import warnings
+warnings.simplefilter(action = 'ignore', category = FutureWarning)
+
+'''
