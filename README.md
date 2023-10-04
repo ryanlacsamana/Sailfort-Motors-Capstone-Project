@@ -237,3 +237,133 @@ df0.head(10)
 ## Basic information about the data
 df0.info()
 ```
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 14999 entries, 0 to 14998
+Data columns (total 10 columns):
+ #   Column                 Non-Null Count  Dtype  
+---  ------                 --------------  -----  
+ 0   satisfaction_level     14999 non-null  float64
+ 1   last_evaluation        14999 non-null  float64
+ 2   number_project         14999 non-null  int64  
+ 3   average_montly_hours   14999 non-null  int64  
+ 4   time_spend_company     14999 non-null  int64  
+ 5   Work_accident          14999 non-null  int64  
+ 6   left                   14999 non-null  int64  
+ 7   promotion_last_5years  14999 non-null  int64  
+ 8   Department             14999 non-null  object 
+ 9   salary                 14999 non-null  object 
+dtypes: float64(2), int64(6), object(2)
+memory usage: 1.1+ MB
+Based on the basic information about the data, there are **`14,999`** non-null objects for all columns, equal to the total number of rows, which means that there are **no null** values in the dataset. The corresponding datatype for each columns are also shown.
+
+#### **Descriptive Statistics about the Data**
+
+```
+df0.describe()
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_montly_hours</th>
+      <th>time_spend_company</th>
+      <th>Work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>14999.000000</td>
+      <td>14999.000000</td>
+      <td>14999.000000</td>
+      <td>14999.000000</td>
+      <td>14999.000000</td>
+      <td>14999.000000</td>
+      <td>14999.000000</td>
+      <td>14999.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.612834</td>
+      <td>0.716102</td>
+      <td>3.803054</td>
+      <td>201.050337</td>
+      <td>3.498233</td>
+      <td>0.144610</td>
+      <td>0.238083</td>
+      <td>0.021268</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.248631</td>
+      <td>0.171169</td>
+      <td>1.232592</td>
+      <td>49.943099</td>
+      <td>1.460136</td>
+      <td>0.351719</td>
+      <td>0.425924</td>
+      <td>0.144281</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.090000</td>
+      <td>0.360000</td>
+      <td>2.000000</td>
+      <td>96.000000</td>
+      <td>2.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.440000</td>
+      <td>0.560000</td>
+      <td>3.000000</td>
+      <td>156.000000</td>
+      <td>3.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.640000</td>
+      <td>0.720000</td>
+      <td>4.000000</td>
+      <td>200.000000</td>
+      <td>3.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.820000</td>
+      <td>0.870000</td>
+      <td>5.000000</td>
+      <td>245.000000</td>
+      <td>4.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>7.000000</td>
+      <td>310.000000</td>
+      <td>10.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
