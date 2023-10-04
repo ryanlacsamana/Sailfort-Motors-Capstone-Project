@@ -238,18 +238,18 @@ df0.head(10)
 df0.info()
 ```
 Data columns (total 10 columns):
- #   Column                | Non-Null Count  |Dtype  
----  ------                 --------------  |-----  
- 0   satisfaction_level     |14999 non-null  |float64
- 1   last_evaluation        |14999 non-null  |float64
- 2   number_project         |14999 non-null  |int64  
- 3   average_montly_hours   |14999 non-null  |int64  
- 4   time_spend_company     |14999 non-null  |int64  
- 5   Work_accident          |14999 non-null  |int64  
- 6   left                   |14999 non-null  |int64  
- 7   promotion_last_5years  |14999 non-null  |int64  
- 8   Department             |14999 non-null  |object 
- 9   salary                 |14999 non-null  |object 
+ #  | Column                | Non-Null Count  |Dtype  
+---  |------                 |--------------  |-----  
+ 0   |satisfaction_level     |14999 non-null  |float64
+ 1   |last_evaluation        |14999 non-null  |float64
+ 2   |number_project         |14999 non-null  |int64  
+ 3   |average_montly_hours   |14999 non-null  |int64  
+ 4   |time_spend_company     |14999 non-null  |int64  
+ 5   |Work_accident          |14999 non-null  |int64  
+ 6   |left                   |14999 non-null  |int64  
+ 7   |promotion_last_5years  |14999 non-null  |int64  
+ 8   |Department             |14999 non-null  |object 
+ 9   |salary                 |14999 non-null  |object 
 dtypes: float64(2), int64(6), object(2)
 memory usage: 1.1+ MB
 Based on the basic information about the data, there are **`14,999`** non-null objects for all columns, equal to the total number of rows, which means that there are **no null** values in the dataset. The corresponding datatype for each columns are also shown.
