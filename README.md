@@ -68,4 +68,17 @@ warnings.simplefilter(action = 'ignore', category = FutureWarning)
 
 ```
 
+### **Load Dataset**
+
+```
+
+df0 = pd.read_csv("HR_comma_sep.csv")
+
+```
+```
+
+## Display the first 10 rows of data
+df0.head(10)
+
+```
 
