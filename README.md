@@ -1212,5 +1212,199 @@ df_enc.head()
 </table>
 </div>
 
+```
+## Create a heatmap to visualize the correlation between variables
+heatmap_corr_df_enc = df_enc[['satisfaction_level','last_evaluation','number_project','average_monthly_hours','tenure']].corr()
+
+plt.figure(figsize=(6,4))
+
+sns.heatmap(heatmap_corr_df_enc, annot=True, annot_kws={'fontsize': 7}, cmap=sns.color_palette('vlag', as_cmap=True))
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+plt.title('Heatmap of the Dataset', fontweight='bold')
+
+plt.show()
+```
+
+![heatmap logreg](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/0695e0ff-30cd-4c54-a65a-4378cd2f99eb)
+
+```
+## Create a plot to visualize the number of employees who stayed/left per department
+plt.subplots(figsize=(7,5))
+
+sns.histplot(data=df1, x='department', hue='left', multiple='dodge', shrink=0.4)
+plt.legend(labels=['left','stayed'], fontsize=8)
+plt.xticks(rotation=45, fontsize=9)
+plt.title('Count of Employees Stayed/Left per Department', fontweight='bold')
+
+plt.show()
+```
+
+![emp left stay](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/ba0a3824-ded8-4b04-9b96-92ca092b6699)
+
+Logistic regression is sensitive to outliers. It is best to remove them before proceeding. We will the outliers from the 'tenure' column that were identified earlier.
+```
+## Select rows without outliers in the 'tenure' column and include them in a new dataset
+df_logreg = df_enc[(df_enc['tenure'] >= lower_limit) & (df_enc['tenure'] <= upper_limit)]
+
+df_logreg.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_monthly_hours</th>
+      <th>tenure</th>
+      <th>work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+      <th>salary</th>
+      <th>department_IT</th>
+      <th>department_RandD</th>
+      <th>department_accounting</th>
+      <th>department_hr</th>
+      <th>department_management</th>
+      <th>department_marketing</th>
+      <th>department_product_mng</th>
+      <th>department_sales</th>
+      <th>department_support</th>
+      <th>department_technical</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.38</td>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.11</td>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.72</td>
+      <td>0.87</td>
+      <td>5</td>
+      <td>223</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.37</td>
+      <td>0.52</td>
+      <td>2</td>
+      <td>159</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.41</td>
+      <td>0.50</td>
+      <td>2</td>
+      <td>153</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+Isolate the Outcome Variable
+```
+y = df_logreg['left']
+
+print(y.head())
+```
+```
+0    1
+2    1
+3    1
+4    1
+5    1
+Name: left, dtype: int64
+```
+
+
 
 
