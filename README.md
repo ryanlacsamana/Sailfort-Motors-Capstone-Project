@@ -2745,4 +2745,127 @@ plt.show()
 
 ![dt](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/51bfdb52-64fd-416f-8b36-30501730d1c0)
 
+#### Decision tree feature importance
+```
+## tree2_importances = pd.DataFrame(tree2.best_estimator_.feature_importances_, columns=X_columns)
+
+tree2_importances = pd.DataFrame(tree2.best_estimator_.feature_importances_, columns=['gini_importance'], index=X.columns)
+
+tree2_importances = tree2_importances.sort_values(by='gini_importance', ascending=False)
+tree2_importances
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gini_importance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>last_evaluation</th>
+      <td>0.349432</td>
+    </tr>
+    <tr>
+      <th>number_project</th>
+      <td>0.299012</td>
+    </tr>
+    <tr>
+      <th>tenure</th>
+      <td>0.196538</td>
+    </tr>
+    <tr>
+      <th>overworked</th>
+      <td>0.152354</td>
+    </tr>
+    <tr>
+      <th>department_technical</th>
+      <td>0.001271</td>
+    </tr>
+    <tr>
+      <th>work_accident</th>
+      <td>0.000537</td>
+    </tr>
+    <tr>
+      <th>salary</th>
+      <td>0.000440</td>
+    </tr>
+    <tr>
+      <th>department_support</th>
+      <td>0.000412</td>
+    </tr>
+    <tr>
+      <th>department_sales</th>
+      <td>0.000004</td>
+    </tr>
+    <tr>
+      <th>promotion_last_5years</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>department_IT</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>department_RandD</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>department_hr</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>department_management</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>department_marketing</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>department_product_mng</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>department_accounting</th>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```
+## Create a bar plot of decision tree feature importance
+
+sns.barplot(data=tree2_importances, x='gini_importance', y=tree2_importances.index, orient='h')
+plt.xlabel('Importance')
+plt.ylabel('Feature')
+plt.title('Decision Tree: Feature Importance of Employee Leaving')
+plt.show()
+```
+
+![dt feat imp](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/9a497a8c-f8cb-45d6-951e-e38ea77c4a17)
+
+#### Random forest feature importance
+```
+## Get feature importances
+rf2_importances = rf2.best_estimator_.feature_importances_
+
+## Get indices of top 10 features
+ind = np.argpartition(rf2.best_estimator_.feature_importances_,-10)[-10:]
+
+## Get columns labes of top 10 features
+feat = X.columns[ind]
+
+## Filter 'rf2_importances' to consist of top 10 feature importances
+rf2_importances = rf2_importances[ind]
+
+y_df = pd.DataFrame({'Feature': feat,
+                     'Importance': rf2_importances
+                     })
+y_sort_df = y_df.sort_values('Importance')
+fig = plt.figure()
+ax1 = fig.add_subplot(111)
+```
 
