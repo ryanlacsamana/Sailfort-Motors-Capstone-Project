@@ -2031,3 +2031,718 @@ tree_cv_results
 </div>
 
 The random forest model returned evaluation scores which are higher than the scores from the decision tree model, with the exception for recall. The recall score from the random forest model is lower by 0.005353 than the score from the decision tree model, however, this is negligible. Overall, the random forest has better performance compared to the decision tree model.
+
+#### - Evaluate the final model on the test set
+```
+## Define a function that gets all the scores from the model's predictions
+def get_scores(model_name:str, model, X_test_data, y_test_data):
+    '''
+    Generate a table of tests scores.
+    
+    In:
+        model_name(string): How you want your model to be named in the output table
+        model: A fit GridSearchCV object
+        X_test_data: numpy array of X_test data
+        y_test_data: numpy array of y_test data
+        
+    Out:
+        pandas dataframe of precision, recall, f1, accuracy, and AUC scores for your model
+    '''
+    
+    preds = model.best_estimator_.predict(X_test_data)
+    
+    auc = roc_auc_score(y_test_data, preds)
+    accuracy = accuracy_score(y_test_data, preds)
+    precision = precision_score(y_test_data, preds)
+    recall = recall_score(y_test_data, preds)
+    f1 = f1_score(y_test_data, preds)
+    
+    table = pd.DataFrame({'model':[model_name],
+                          'precision':[precision],
+                          'recall':[recall],
+                          'f1':[f1],
+                          'accuracy':[accuracy],
+                          'AUC':[auc]
+                          })
+    
+    return table
+```
+```
+## Get predictions on test data
+rf1_test_scores = get_scores('Random Forest 1 Test Scores', rf1, X_test, y_test)
+rf1_test_scores
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+      <th>accuracy</th>
+      <th>AUC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Random Forest 1 Test Scores</td>
+      <td>0.984716</td>
+      <td>0.907445</td>
+      <td>0.944503</td>
+      <td>0.982322</td>
+      <td>0.952323</td>
+    </tr>
+  </tbody>
+</table>
+</div>    
+
+The test scores are almost similar to the validation scores, which means that this is a strong model. This model will perform well on new and unseen data.
+
+#### Feature Engineering
+
+The model yields high evaluation scores. However, there is a chance that a data leakage occured.
+
+It might be possible that the satisfaction level for all the employees were not reported. There could be also be employees that worked few hours because they decided to quit the job, or the management decided to fire them.
+
+The previous round of decision tree and random forest models included all variables as features. For this round, we will drop the satisfaction_level and average_monthly_hours and create a new feature overworked, which contains a binary variable on whether an employee is overworked.
+```
+## Drop 'satisfaction_level' and save the resulting dataframe into a new variable
+df2 = df_enc.drop('satisfaction_level', axis=1)
+
+df2.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_monthly_hours</th>
+      <th>tenure</th>
+      <th>work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+      <th>salary</th>
+      <th>department_IT</th>
+      <th>department_RandD</th>
+      <th>department_accounting</th>
+      <th>department_hr</th>
+      <th>department_management</th>
+      <th>department_marketing</th>
+      <th>department_product_mng</th>
+      <th>department_sales</th>
+      <th>department_support</th>
+      <th>department_technical</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.86</td>
+      <td>5</td>
+      <td>262</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.87</td>
+      <td>5</td>
+      <td>223</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.52</td>
+      <td>2</td>
+      <td>159</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```
+## Create 'overworked' column which is identical to the 'average_monthly_hours' column
+df2['overworked'] = df2['average_monthly_hours']
+
+## Check the max and min values for 'overworked' column
+print("Max hours:", df2['overworked'].max())
+print("Min hours:", df2['overworked'].min())
+Max hours: 310
+Min hours: 96
+```
+For our assumption of a 5-days work week, 8 hours per day, with 2 weeks of vacation each year, the average monthly working hours will be 166.67 hours. Let us account for an overtime of 8 hours or weekend work of 8 hours per week, the threshold for being overworked will be **(8 hours/day * 6 days/week * 50 weeks/year) / 12 months/year = 200 hours**
+
+If df['overworked'] > 200, it will return True, and if df['overworked'] ≤ 200, it will return False. The results will be converted to int, which is 1 for True and 0 for False.
+```
+## Create 'overworked' column
+df2['overworked'] = (df2['overworked'] > 200).astype(int)
+
+## Drop the 'average_monthly_hours' column
+df2 = df2.drop('average_monthly_hours', axis=1)
+
+
+df2.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>tenure</th>
+      <th>work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+      <th>salary</th>
+      <th>department_IT</th>
+      <th>department_RandD</th>
+      <th>department_accounting</th>
+      <th>department_hr</th>
+      <th>department_management</th>
+      <th>department_marketing</th>
+      <th>department_product_mng</th>
+      <th>department_sales</th>
+      <th>department_support</th>
+      <th>department_technical</th>
+      <th>overworked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.53</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.86</td>
+      <td>5</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.88</td>
+      <td>7</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.87</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.52</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+#### Round 2
+
+#### Decision Tree
+
+#### - Isolate features and target variable
+```
+y = df2['left']
+
+X = df2.drop('left', axis=1)
+```
+#### - Create test data
+```
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y, random_state=0)
+```
+#### - Instantiate model
+```
+## Instantiate model
+tree = DecisionTreeClassifier(random_state=0)
+
+## Assign a dictionary of hyperparameters
+cv_params = {'max_depth':[4,6,8,None],
+             'min_samples_leaf':[2,5,1],
+             'min_samples_split':[2,4,6]
+             }
+
+## Assign scoring metrics
+scoring = ('accuracy','precision','recall','f1','roc_auc')
+
+## Instantiate GridSearch
+tree2 = GridSearchCV(tree, cv_params, scoring=scoring, cv=4, refit='roc_auc')
+```
+```
+%%time
+tree2.fit(X_train, y_train)
+CPU times: user 3.04 s, sys: 3 ms, total: 3.05 s
+Wall time: 3.05 s
+```
+```
+GridSearchCV
+GridSearchCV(cv=4, estimator=DecisionTreeClassifier(random_state=0),
+             param_grid={'max_depth': [4, 6, 8, None],
+                         'min_samples_leaf': [2, 5, 1],
+                         'min_samples_split': [2, 4, 6]},
+             refit='roc_auc',
+             scoring=('accuracy', 'precision', 'recall', 'f1', 'roc_auc'))
+estimator: DecisionTreeClassifier
+DecisionTreeClassifier(random_state=0)
+
+DecisionTreeClassifier
+DecisionTreeClassifier(random_state=0)
+```
+#### - Check the best parameter and AUC scores
+```
+## Check best parameters
+print("Best parameters:", tree2.best_params_)
+
+## Check best AUC score
+print("Best AUC score:", tree2.best_score_)
+```
+Best parameters: {'max_depth': 6, 'min_samples_leaf': 5, 'min_samples_split': 2}
+Best AUC score: 0.956906013294911
+
+#### - Check other scores
+```
+## Get all CV results
+tree2_cv_results = make_results('Decision Tree CV 2', tree2, 'auc')
+
+tree_cv_results2 = pd.concat([tree1_cv_results, tree2_cv_results], axis=0)
+tree_cv_results2 = tree_cv_results2.reset_index(drop=True)
+tree_cv_results2
+```
+The model still yields high AUC score even after dropping the satisfaction level and average monthly hours column.
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+      <th>accuracy</th>
+      <th>auc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Decision Tree CV 1</td>
+      <td>0.963198</td>
+      <td>0.922352</td>
+      <td>0.942266</td>
+      <td>0.981208</td>
+      <td>0.968874</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Decision Tree CV 2</td>
+      <td>0.875433</td>
+      <td>0.900874</td>
+      <td>0.887608</td>
+      <td>0.962082</td>
+      <td>0.956906</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+The model yields slightly lower scores on all metrics, except for precision. However, this is still indicative of a strong model.
+
+#### Random Forest
+```
+## Instantiate model
+rf = RandomForestClassifier(random_state=0)
+
+## Assign a dictionary of hyperparamaters
+cv_params = {'max_depth':[3,5,None],
+             'max_features':[1.0],
+             'max_samples':[0.7,1.0],
+             'min_samples_leaf':[1,2,3],
+             'min_samples_split':[2,3,4],
+             'n_estimators':[300,500]
+             }
+
+## Assign scoring metrics
+scoring = ('accuracy','recall','precision','f1','roc_auc')
+
+## Instantiate GridSearch
+rf2 = GridSearchCV(rf, cv_params, scoring=scoring, cv=4, refit='roc_auc')
+```
+```
+%%time
+rf2.fit(X_train, y_train)
+CPU times: user 16min 24s, sys: 2.62 s, total: 16min 26s
+Wall time: 16min 28s
+```
+```
+GridSearchCV
+GridSearchCV(cv=4, estimator=RandomForestClassifier(random_state=0),
+             param_grid={'max_depth': [3, 5, None], 'max_features': [1.0],
+                         'max_samples': [0.7, 1.0],
+                         'min_samples_leaf': [1, 2, 3],
+                         'min_samples_split': [2, 3, 4],
+                         'n_estimators': [300, 500]},
+             refit='roc_auc',
+             scoring=('accuracy', 'recall', 'precision', 'f1', 'roc_auc'))
+estimator: RandomForestClassifier
+RandomForestClassifier(random_state=0)
+
+RandomForestClassifier
+RandomForestClassifier(random_state=0)
+```
+Write pickle to save the model
+```
+pd.to_pickle(rf2, "sailfort-motors", compression='infer', protocol=5)
+pd.read_pickle("sailfort-motors", compression='infer')
+```
+```
+GridSearchCV
+GridSearchCV(cv=4, estimator=RandomForestClassifier(random_state=0),
+             param_grid={'max_depth': [3, 5, None], 'max_features': [1.0],
+                         'max_samples': [0.7, 1.0],
+                         'min_samples_leaf': [1, 2, 3],
+                         'min_samples_split': [2, 3, 4],
+                         'n_estimators': [300, 500]},
+             refit='roc_auc',
+             scoring=('accuracy', 'recall', 'precision', 'f1', 'roc_auc'))
+estimator: RandomForestClassifier
+RandomForestClassifier(random_state=0)
+
+RandomForestClassifier
+RandomForestClassifier(random_state=0)
+```
+```
+#### - Check for optimal parameters, best AUC scores, and get all the CV scores
+
+## Check best parameters
+print("Best parameters:", rf2.best_params_)
+
+## Check best AUC score
+print("Best AUC score:", rf2.best_score_)
+```
+Best parameters: {'max_depth': 5, 'max_features': 1.0, 'max_samples': 1.0, 'min_samples_leaf': 1, 'min_samples_split': 4, 'n_estimators': 500}
+Best AUC score: 0.9663699459505957
+```
+## Get all CV scores
+rf2_cv_results = make_results('Random Forest CV 2', rf2, 'auc')
+tree_rf_cv_results2 = pd.concat([tree1_cv_results, tree2_cv_results, rf1_cv_results, rf2_cv_results], axis=0)
+tree_rf_cv_results2 = tree_rf_cv_results2.reset_index(drop=True)
+tree_rf_cv_results2
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+      <th>accuracy</th>
+      <th>auc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Decision Tree CV 1</td>
+      <td>0.963198</td>
+      <td>0.922352</td>
+      <td>0.942266</td>
+      <td>0.981208</td>
+      <td>0.968874</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Decision Tree CV 2</td>
+      <td>0.875433</td>
+      <td>0.900874</td>
+      <td>0.887608</td>
+      <td>0.962082</td>
+      <td>0.956906</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Random Forest CV 1</td>
+      <td>0.985667</td>
+      <td>0.916999</td>
+      <td>0.950078</td>
+      <td>0.983988</td>
+      <td>0.979075</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Random Forest CV 2</td>
+      <td>0.862286</td>
+      <td>0.904222</td>
+      <td>0.882598</td>
+      <td>0.960080</td>
+      <td>0.966370</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+Compared to the first model for Decision Trees and Random Forest, respectively, the scores drop for the second model. However, these scores are still high and can perform well.
+
+The Random Forest model scored better on recall and auc metrics, while the Decision Tree model scored better for precision, f1, and accuracy metrics. The Decision tree scored higher on f1 score than the Random Forest model, but by a very small margin, so we will get predictions on test data from both models.
+
+#### - Get predictions on test data
+```
+rf2_test_scores = get_scores('Random Forest Test 2', rf2, X_test, y_test)
+
+tree2_test_scores = get_scores('Decision Tree Test 2', tree2, X_test, y_test)
+test2_prediction_results = pd.concat([tree2_test_scores, rf2_test_scores], axis=0)
+test2_prediction_results
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+      <th>accuracy</th>
+      <th>AUC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Decision Tree Test 2</td>
+      <td>0.792683</td>
+      <td>0.913655</td>
+      <td>0.848881</td>
+      <td>0.945964</td>
+      <td>0.933027</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Random Forest Test 2</td>
+      <td>0.882812</td>
+      <td>0.907631</td>
+      <td>0.895050</td>
+      <td>0.964643</td>
+      <td>0.941815</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+Both the test scores also yields high scores and almost similar to the results of the validation, except for the precision score from the Decision Tree model.
+
+#### Plot a confusion matrix to visualize how well the model performs
+```
+fig, ax = plt.subplots(1,2, figsize=(16,7))
+
+## CONFUSION MATRIX FROM DECISION TREE MODEL
+## Generate array of values for confusion matrix
+preds = tree2.best_estimator_.predict(X_test)
+cm = confusion_matrix(y_test, preds, labels=rf2.classes_)
+
+## Plot confusion matrix
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['stayed','left'])
+disp.plot(values_format='', cmap='YlOrBr', ax=ax[0])
+ax[0].set_title("Confusion Matrix from Decision Tree Model")
+
+## CONFUSION MATRIX FROM RANDOM FOREST MODEL
+## Generate array of values for confusion matrix
+preds = rf2.best_estimator_.predict(X_test)
+cm = confusion_matrix(y_test, preds, labels=rf2.classes_)
+
+## Plot confusion matrix
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['stayed','left'])
+disp.plot(values_format='', cmap='YlOrBr', ax=ax[1])
+ax[1].set_title("Confusion Matrix from Random Forest Model")
+
+plt.show()
+```
+
+![confusionmatrix logreg dt vs rf](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/e8d25e4f-c4ab-40c9-8acd-55c62b839acb)
+
+#### Various Exploratory Plots
+
+#### Decision Tree Splits
+```
+## Plot the tree
+plt.figure(figsize=(85,20))
+
+plot_tree(tree2.best_estimator_, max_depth=6, fontsize=10, feature_names=X.columns, class_names={0:'stayed',1:'left'}, filled=True)
+
+plt.show()
+```
+
+![dt](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/51bfdb52-64fd-416f-8b36-30501730d1c0)
+
+
