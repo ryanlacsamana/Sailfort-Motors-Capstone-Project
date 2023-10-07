@@ -2869,3 +2869,26 @@ fig = plt.figure()
 ax1 = fig.add_subplot(111)
 ```
 
+![rf feat imp](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/009657d1-883e-46c0-aa36-f3bd7099569c)
+
+From the bar plots of Feature Importance from both Decision Tree and Random Forest, the variables last_evaluation, number_project, tenure, and overworked holds the most importance. These are the same variables that we used in developing the decision tree model.
+
+###Conclusions and Recommendations
+The models and feature importance confirmed that the employees in the company are overworked.
+
+To increase employee retention, the following recommendations could be presented to the stakeholders:
+
+*1. Employees who worked longer hours and received high evaluation scores should be considered for promotion.
+*2. Conduct investigation for the dissatisfaction of employees of employees who reach the tenure of 4 years.
+*3. Limit the number of projects assigned for each employee.
+*4. Reward employees who worked for longer hours. The type of reward could be based on evaluation scores.
+*5. Evaluation scores should not only be based on the number of working hours rendered by an employee. Consider other metrics for evaluating employees.
+*6. Familiarize employees regarding overtime pay policies, workloads, and time-offs.
+*7. The company should conduct company-wide and team discussions to understand and address issues regarding workloads, work cultures, salary, and other specific and relevant contexts.
+
+To further improve the results of the study, other aspects should be considered that were not be included in the dataset. These aspects include but not limited to the following:
+
+*Frequency of salary increase of each employee: The dataset did not include if an employee received a salary increase for a certain amount of time. This could also be driving an employee to stay or leave the company.
+*Distance of employee from the work site: Work-from-home or hybrid setup could be implemented for employees who have work assignments that can be done remotely. This could also save the company from expenses such as electricity. For employees with workloads that cannot be done remotely, but are living far from the work site, consider renting a unit or house to be used by these employees.
+*Conduct activities such as seminars, trainings, and recreational activities such as team building, to improve employee skills and relationship with other employees.
+
