@@ -1892,3 +1892,142 @@ tree1_cv_results
   </tbody>
 </table>
 </div>
+
+The model returns high scores for precision, recall, f1, accuracy, and auc, which is strong indicator of the model's good performance. Decision trees can be vulnerable to overfitting, however, random forest can avoid overfitting by incorporating multiple trees to make predictions.
+
+#### Random Forest
+
+#### - Construct a random forest model and set-up cross-validated grid search
+
+#### -Fit the random forest model to the training data
+```
+## Instantiate model
+rf = RandomForestClassifier(random_state=0)
+
+## Assign a dictionary of hyperparameters to search over
+cv_params = {'max_depth':[3,5,None],
+             'max_features':[1.0],
+             'max_samples':[0.7,1.0],
+             'min_samples_leaf':[1,2,3],
+             'min_samples_split':[2,3,4],
+             'n_estimators':[300,500]
+             }
+
+## Assign scoring metrics to capture
+scoring = ('accuracy','precision','recall','f1','roc_auc')
+
+## Instantiate GridSearch
+rf1 = GridSearchCV(rf, cv_params, scoring=scoring, cv=4, refit='roc_auc')
+```
+#### - Fit the random forest model to the training data
+```
+%%time
+rf1.fit(X_train, y_train)
+CPU times: user 22min 4s, sys: 2.74 s, total: 22min 7s
+Wall time: 22min 10s
+```
+```
+GridSearchCV
+GridSearchCV(cv=4, estimator=RandomForestClassifier(random_state=0),
+             param_grid={'max_depth': [3, 5, None], 'max_features': [1.0],
+                         'max_samples': [0.7, 1.0],
+                         'min_samples_leaf': [1, 2, 3],
+                         'min_samples_split': [2, 3, 4],
+                         'n_estimators': [300, 500]},
+             refit='roc_auc',
+             scoring=('accuracy', 'precision', 'recall', 'f1', 'roc_auc'))
+estimator: RandomForestClassifier
+RandomForestClassifier(random_state=0)
+
+RandomForestClassifier
+RandomForestClassifier(random_state=0)
+```
+
+Write pickle to save the model
+```
+## Write pickle
+pd.to_pickle(rf1, "sailfort-motors", compression='infer', protocol=5)
+## Read pickle
+pd.read_pickle("sailfort-motors", compression='infer')
+GridSearchCV
+GridSearchCV(cv=4, estimator=RandomForestClassifier(random_state=0),
+             param_grid={'max_depth': [3, 5, None], 'max_features': [1.0],
+                         'max_samples': [0.7, 1.0],
+                         'min_samples_leaf': [1, 2, 3],
+                         'min_samples_split': [2, 3, 4],
+                         'n_estimators': [300, 500]},
+             refit='roc_auc',
+             scoring=('accuracy', 'precision', 'recall', 'f1', 'roc_auc'))
+estimator: RandomForestClassifier
+RandomForestClassifier(random_state=0)
+
+RandomForestClassifier
+RandomForestClassifier(random_state=0)
+```
+#### -Identify the best AUC score and optimal values for the parameters by the random forest model
+```
+## Check best AUC score
+print("Best AUC Score from the RF model:")
+rf1.best_score_
+```
+Best AUC Score from the RF model:
+0.9790751171477935
+```
+## Check best parameters
+print("Optimal values for the parameters of the RF model:")
+rf1.best_params_
+```
+```
+Optimal values for the parameters of the RF model:
+{'max_depth': None,
+ 'max_features': 1.0,
+ 'max_samples': 0.7,
+ 'min_samples_leaf': 2,
+ 'min_samples_split': 2,
+ 'n_estimators': 500}
+```
+
+#### - Collect all the evaluation scores on the training set for the decision tree and random forest models
+```
+rf1_cv_results = make_results('Random Forest CV 1', rf1, 'auc')
+tree_cv_results = pd.concat([tree1_cv_results, rf1_cv_results], axis=0)
+tree_cv_results = tree_cv_results.reset_index(drop=True)
+tree_cv_results
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+      <th>accuracy</th>
+      <th>auc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Decision Tree CV 1</td>
+      <td>0.963198</td>
+      <td>0.922352</td>
+      <td>0.942266</td>
+      <td>0.981208</td>
+      <td>0.968874</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Random Forest CV 1</td>
+      <td>0.985667</td>
+      <td>0.916999</td>
+      <td>0.950078</td>
+      <td>0.983988</td>
+      <td>0.979075</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+The random forest model returned evaluation scores which are higher than the scores from the decision tree model, with the exception for recall. The recall score from the random forest model is lower by 0.005353 than the score from the decision tree model, however, this is negligible. Overall, the random forest has better performance compared to the decision tree model.
