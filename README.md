@@ -1573,4 +1573,23 @@ log_disp.plot(values_format='', cmap='YlOrBr')
 plt.show()
 ```
 
+![confusionmatrix logreg](https://github.com/ryanlacsamana/Sailfort-Motors-Capstone-Project/assets/138304188/370195bc-ee83-4e28-87e7-ff7e82049677)
+
+The confusion matrix returned the following values:
+
+**True negatives** (employees who did not leave the company that the model accurately predicted did not leave)
+**False negatives** (employees who did not leave the company but the model predicted as leaving)
+**True positives** (employees who left the company that the model accurately predicted as leaving)
+**False positives** (employees who left the company but the model predicted did not leave)
+
+#### Create a classification report
+```
+## Check the class balance in the data
+print(df_logreg['left'].value_counts(normalize=True))
+left
+0    0.831468
+1    0.168532
+Name: proportion, dtype: float64
+```
+The data is composed of approximately 83% employees who stayed and approximately 17% employees who left the company. The data is not perfectly balanced, but is not too imbalanced. We can continue evaluating the model without modifying the class balance.
 
