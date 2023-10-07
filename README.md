@@ -1057,5 +1057,160 @@ An employee who spends more than 6 years in the company tends not to leave, howe
 ### Model Building, Results and Evaluation
 The goal for this project is to predict whether an employee will leave the company. The outcome is a categorical variable and involves binary classification. The outcome variable will be 1 (employee left the company) and 0 (employee did not leave the company).
 
+#### Modeling Approach A: Logistic Regression Model
+The dataset includes 2 non-numeric variables, department and salary. The variable department is a categorical variable and can be converted as a dummy in modeling. The variable salary is ordinal, and can be converted into numbers 0-2.
+```
+## Copy the dataframe
+df_enc = df1.copy()
+
+## Encode the 'salary' column as an ordinal numeric category
+df_enc['salary'] = (df_enc['salary'].astype('category').cat.set_categories(['low','medium','high']).cat.codes)
+
+## Dummy encode the 'department' column
+df_enc = pd.get_dummies(df_enc, drop_first=False)
+
+## Display the new dataframe
+df_enc.head()
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_monthly_hours</th>
+      <th>tenure</th>
+      <th>work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+      <th>salary</th>
+      <th>department_IT</th>
+      <th>department_RandD</th>
+      <th>department_accounting</th>
+      <th>department_hr</th>
+      <th>department_management</th>
+      <th>department_marketing</th>
+      <th>department_product_mng</th>
+      <th>department_sales</th>
+      <th>department_support</th>
+      <th>department_technical</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.38</td>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.80</td>
+      <td>0.86</td>
+      <td>5</td>
+      <td>262</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.11</td>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.72</td>
+      <td>0.87</td>
+      <td>5</td>
+      <td>223</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.37</td>
+      <td>0.52</td>
+      <td>2</td>
+      <td>159</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 
 
