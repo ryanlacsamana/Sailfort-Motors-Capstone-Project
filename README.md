@@ -1592,4 +1592,42 @@ left
 Name: proportion, dtype: float64
 ```
 The data is composed of approximately 83% employees who stayed and approximately 17% employees who left the company. The data is not perfectly balanced, but is not too imbalanced. We can continue evaluating the model without modifying the class balance.
+```
+## Create a classification report for logistic regression model
+target_names = ['Predicted would not leave','Predicted would leave']
+print(classification_report(y_test, y_pred, target_names=target_names))
+```
+```
+                           precision    recall  f1-score   support
 
+Predicted would not leave       0.86      0.93      0.90      2321
+    Predicted would leave       0.44      0.26      0.33       471
+
+                 accuracy                           0.82      2792
+                macro avg       0.65      0.60      0.61      2792
+             weighted avg       0.79      0.82      0.80      2792
+```
+
+The model values of precision, recall, and f1-score of 0.44, 0.26, and 0.33 respectively. These scores are significantly low. However, it is important to note that we removed outliers in the dataset. These outliers might have been significant data points to be considered in the model. With this, we will consider Tree-based modeling.
+
+### Modeling Approach B: Tree-based Model
+#### Isolate the outcome variable
+```
+y = df_enc['left']
+
+print(y.head())
+```
+```
+0    1
+1    1
+2    1
+3    1
+4    1
+Name: left, dtype: int64
+```
+#### Select the features
+```
+X = df_enc.drop('left', axis=1)
+
+X.head()
+```
