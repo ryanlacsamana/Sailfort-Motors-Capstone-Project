@@ -2878,13 +2878,13 @@ The models and feature importance confirmed that the employees in the company ar
 
 To increase employee retention, the following recommendations could be presented to the stakeholders:
 
-* 1. Employees who worked longer hours and received high evaluation scores should be considered for promotion.
-* 2. Conduct investigation for the dissatisfaction of employees of employees who reach the tenure of 4 years.
-* 3. Limit the number of projects assigned for each employee.
-* 4. Reward employees who worked for longer hours. The type of reward could be based on evaluation scores.
-* 5. Evaluation scores should not only be based on the number of working hours rendered by an employee. Consider other metrics for evaluating employees.
-* 6. Familiarize employees regarding overtime pay policies, workloads, and time-offs.
-* 7. The company should conduct company-wide and team discussions to understand and address issues regarding workloads, work cultures, salary, and other specific and relevant contexts.
+  1. Employees who worked longer hours and received high evaluation scores should be considered for promotion.
+  2. Conduct investigation for the dissatisfaction of employees of employees who reach the tenure of 4 years.
+  3. Limit the number of projects assigned for each employee.
+  4. Reward employees who worked for longer hours. The type of reward could be based on evaluation scores.
+  5. Evaluation scores should not only be based on the number of working hours rendered by an employee. Consider other metrics for evaluating employees.
+  6. Familiarize employees regarding overtime pay policies, workloads, and time-offs.
+  7. The company should conduct company-wide and team discussions to understand and address issues regarding workloads, work cultures, salary, and other specific and relevant contexts.
 
 To further improve the results of the study, other aspects should be considered that were not be included in the dataset. These aspects include but not limited to the following:
 
