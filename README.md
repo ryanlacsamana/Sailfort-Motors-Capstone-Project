@@ -1631,3 +1631,166 @@ X = df_enc.drop('left', axis=1)
 
 X.head()
 ```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_monthly_hours</th>
+      <th>tenure</th>
+      <th>work_accident</th>
+      <th>promotion_last_5years</th>
+      <th>salary</th>
+      <th>department_IT</th>
+      <th>department_RandD</th>
+      <th>department_accounting</th>
+      <th>department_hr</th>
+      <th>department_management</th>
+      <th>department_marketing</th>
+      <th>department_product_mng</th>
+      <th>department_sales</th>
+      <th>department_support</th>
+      <th>department_technical</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.38</td>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.80</td>
+      <td>0.86</td>
+      <td>5</td>
+      <td>262</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.11</td>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.72</td>
+      <td>0.87</td>
+      <td>5</td>
+      <td>223</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.37</td>
+      <td>0.52</td>
+      <td>2</td>
+      <td>159</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+#### Split the data into training and testing sets
+```
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+```
+#### Round 1
+
+#### Decision Tree
+```
+## Instantiate model
+tree = DecisionTreeClassifier(random_state=0)
+
+## Assign a dictionary of hyperparameters
+cv_params = {'max_depth': [4,6,8,None], 'min_samples_leaf': [2,5,1], 'min_samples_split': [2,4,6]}
+
+## Assign scoring metrics to capture
+scoring = ('accuracy','precision','recall','f1','roc_auc')
+
+## Instantiate Grid Search
+tree1 = GridSearchCV(tree, cv_params, scoring=scoring, cv=4, refit='roc_auc')
+```
+
+#### - Fit the decision tree model to the training data
+```
+%%time
+tree1.fit(X_train, y_train)
+CPU times: user 3.6 s, sys: 3.1 ms, total: 3.61 s
+Wall time: 3.61 s
+```
