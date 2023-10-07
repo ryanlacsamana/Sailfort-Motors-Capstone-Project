@@ -1807,3 +1807,88 @@ DecisionTreeClassifier(random_state=0)
 DecisionTreeClassifier
 DecisionTreeClassifier(random_state=0)
 ```
+
+#### - Identify optimal values for the decision tree parameters
+```
+print("Best parameters:", tree1.best_params_)
+print("Best AUC score for CV:", tree1.best_score_)
+Best parameters: {'max_depth': 6, 'min_samples_leaf': 1, 'min_samples_split': 4}
+Best AUC score for CV: 0.9688735287591919
+```
+The model returned an AUC score of 0.969, which is pretty high. This indicates how well the model can predict employees who will leave.
+
+#### **- Write a function to extract all the scores from the grid search**
+```
+def make_results(model_name:str, model_object, metric:str):
+    '''
+    Arguments:
+        model_name (string): what you want the model to be called in the output table
+        model_object: a fit GridSearchCV object
+        metric (string): precision, recall, f1, accuracy, or auc
+    
+    Returns a pandas df with the f1, recall, precision, accuracy, and auc scores for the model with the best mean 'metric' score across validation folds.
+    '''
+
+    ## Dictionary that maps input metric to actual metric name in GridSearchCV
+    metric_dict = {'auc': 'mean_test_roc_auc','precision': 'mean_test_precision',
+                   'recall': 'mean_test_recall',
+                   'f1': 'mean_test_f1',
+                   'accuracy': 'mean_test_accuracy'
+               }
+
+    ## Get all the results from the CV and put them in a dataframe
+    cv_results =  pd.DataFrame(model_object.cv_results_)
+
+    ## Isolate the row of the dataframe with the max(metric) score
+    best_estimator_results = cv_results.iloc[cv_results[metric_dict[metric]].idxmax(), :]
+
+    ## Extract accuracy, precision, recall, and f1 score from that row
+    auc = best_estimator_results.mean_test_roc_auc
+    precision = best_estimator_results.mean_test_precision
+    recall = best_estimator_results.mean_test_recall
+    f1 = best_estimator_results.mean_test_f1
+    accuracy = best_estimator_results.mean_test_accuracy
+
+    ## Create table of results
+    table = pd.DataFrame()
+    table = pd.DataFrame({'model':[model_name],
+                          'precision': [precision],
+                          'recall': [recall],
+                          'f1': [f1],
+                          'accuracy': [accuracy],
+                          'auc': [auc]
+                      })
+    return table
+```
+Get the scores from the GridSearch
+```
+## Get all CV scores
+tree1_cv_results = make_results('Decision Tree CV 1', tree1, 'auc')
+tree1_cv_results
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+      <th>accuracy</th>
+      <th>auc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Decision Tree CV 1</td>
+      <td>0.963198</td>
+      <td>0.922352</td>
+      <td>0.942266</td>
+      <td>0.981208</td>
+      <td>0.968874</td>
+    </tr>
+  </tbody>
+</table>
+</div>
