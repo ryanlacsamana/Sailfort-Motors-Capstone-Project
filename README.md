@@ -1390,7 +1390,7 @@ df_logreg.head()
 </table>
 </div>
 
-Isolate the Outcome Variable
+#### Isolate the Outcome Variable
 ```
 y = df_logreg['left']
 
@@ -1405,6 +1405,172 @@ print(y.head())
 Name: left, dtype: int64
 ```
 
+#### Select features to be used in the model
+```
+X = df_logreg.drop('left', axis=1)
 
+X.head()
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_monthly_hours</th>
+      <th>tenure</th>
+      <th>work_accident</th>
+      <th>promotion_last_5years</th>
+      <th>salary</th>
+      <th>department_IT</th>
+      <th>department_RandD</th>
+      <th>department_accounting</th>
+      <th>department_hr</th>
+      <th>department_management</th>
+      <th>department_marketing</th>
+      <th>department_product_mng</th>
+      <th>department_sales</th>
+      <th>department_support</th>
+      <th>department_technical</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.38</td>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.11</td>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.72</td>
+      <td>0.87</td>
+      <td>5</td>
+      <td>223</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.37</td>
+      <td>0.52</td>
+      <td>2</td>
+      <td>159</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.41</td>
+      <td>0.50</td>
+      <td>2</td>
+      <td>153</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+#### Split the data into training and testing sets
+```
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y, random_state=42)
+```
+#### Construct a Logistic Regression Model and fit it to the training dataset
+
+```
+log_clf = LogisticRegression(random_state=42, max_iter=500).fit(X_train, y_train)
+```
+#### Use the Logistic Regression Model to make predictions of the test set
+```
+y_pred = log_clf.predict(X_test)
+```
+
+#### Create a Confusion Matrix
+```
+## Compute values for confusion matrix
+log_cm = confusion_matrix(y_test, y_pred, labels=log_clf.classes_)
+
+## Create display of confusion matrix
+log_disp = ConfusionMatrixDisplay(confusion_matrix=log_cm, display_labels=['stayed','left'])
+
+## Plot confusion matrix
+log_disp.plot(values_format='', cmap='YlOrBr')
+
+plt.show()
+```
 
 
