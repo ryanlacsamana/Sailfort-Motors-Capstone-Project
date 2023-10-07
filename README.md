@@ -1577,10 +1577,10 @@ plt.show()
 
 The confusion matrix returned the following values:
 
-**True negatives** (employees who did not leave the company that the model accurately predicted did not leave)
-**False negatives** (employees who did not leave the company but the model predicted as leaving)
-**True positives** (employees who left the company that the model accurately predicted as leaving)
-**False positives** (employees who left the company but the model predicted did not leave)
+	**True negatives** (employees who did not leave the company that the model accurately predicted did not leave)
+	**False negatives** (employees who did not leave the company but the model predicted as leaving)
+	**True positives** (employees who left the company that the model accurately predicted as leaving)
+	**False positives** (employees who left the company but the model predicted did not leave)
 
 #### Create a classification report
 ```
